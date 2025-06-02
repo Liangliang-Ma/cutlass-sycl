@@ -115,3 +115,42 @@ static inline unsigned short E4M3_to_FP16(unsigned char xin) {
 
     return (unsigned short)x16.i;
 }
+
+static inline ushort16 E4M3_to_FP16_chunk16(uchar16 xin) {
+  uchar16 xa = xin & 0x7F;
+  uchar16 sgn_x = xin ^ xa;
+
+  uchar16 zero_mask;
+  #pragma unroll
+  for (int i = 0; i < 16; ++i) {
+      zero_mask[i] = (xa[i] == 0) ? 1 : 0;
+  }
+  uchar16 nan_mask = (0x7E - xa) & 0x80;
+  uchar16 den_mask = ((xa - 8) >> 7) & 0x01;
+
+  xa += (nan_mask >> 1);
+  xa |= (den_mask & 8);
+  den_mask &= 0x48;
+  xa += 0x40 & ~(zero_mask * 0x40);
+
+  ushort16 x16 = convert_ushort16(xa) << 7;
+  ushort16 den_corr = convert_ushort16(den_mask & ~zero_mask) << 7;
+
+  ushort16 result = x16 - den_corr;
+  result &= ~(convert_ushort16(zero_mask) << 7);
+
+  ushort16 sign_ext = convert_ushort16(sgn_x) << 8;
+  result ^= sign_ext;
+
+  return result;
+}
+
+
+template<int N>
+static inline void E5M2_to_FP16(cutlass::Array<uint8_t, N> const &xin, cutlass::Array<uint16_t, N> &xout) {
+  // Adapted from https://github.com/pytorch/pytorch/blob/dfcfad2112933cc34247421ac0a4d3f19a1806c1/c10/util/Float8_e5m2.h#L30-L43
+  CUTLASS_PRAGMA_UNROLL
+  for (int i = 0; i < N; i++) {
+    xout[i] = (static_cast<uint16_t>(xin[i])) << 8;
+  }
+}

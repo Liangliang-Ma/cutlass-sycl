@@ -993,6 +993,15 @@ struct MainloopIntelW8A8 {
     using Schedule = KernelXe;
     using ClusterShape = Shape<_1, _1, _1>;
 };
+
+template<int Stages_, class KernelSchedule = KernelXe>
+struct MainloopIntelScaledMMW8A8 {
+    constexpr static int Stages = Stages_;
+    constexpr static int SubgroupSize = 16;
+    using ArchTag = arch::IntelXe;
+    using Schedule = KernelXe;
+    using ClusterShape = Shape<_1, _1, _1>;
+};
 #endif
 
 #if defined(CUTLASS_ENABLE_SYCL)
