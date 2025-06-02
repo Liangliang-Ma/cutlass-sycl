@@ -41,7 +41,7 @@
             Tensor scaleA - FP16 of shape (M,K,L)
             Tensor scaleB - FP16 of shape (K,N,L)
             
-    Output: Tensor D - FP16 of shape (M,N,L)
+    Output: Tensor D - FP32 of shape (M,N,L)
 
     Verification for this example is a standard fp16 GEMM, with input data upcasted on the host.
 
