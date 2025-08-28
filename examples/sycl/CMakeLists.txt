@@ -38,7 +38,7 @@ if(SYCL_INTEL_TARGET)
   add_subdirectory(07_bmg_dual_gemm)
   add_subdirectory(08_bmg_gemm_f8)
   add_subdirectory(09_bmg_grouped_gemm_f8)
-  add_subdirectory(10_mll_grouped_gemm_fp8)
+  add_subdirectory(10_mll_fused_moe)
 endif()
 
 if (CUTLASS_ENABLE_SYCL)
