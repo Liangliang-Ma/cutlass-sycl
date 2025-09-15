@@ -139,7 +139,8 @@ public:
                                              Layout<CopyThreadShape>{},
                                              make_layout(shape_div(typename Trait_D::BlockShape{}, CopyThreadShape{}))));
 private:
-  constexpr static bool is_source_supported = not cute::is_void_v<ElementC>;
+  // constexpr static bool is_source_supported = not cute::is_void_v<ElementC>;
+  constexpr static bool is_source_supported = false;
   constexpr static bool is_destination_supported = not cute::is_void_v<ElementD> && not cute::is_void_v<CopyOpR2G>;
 
 public:
